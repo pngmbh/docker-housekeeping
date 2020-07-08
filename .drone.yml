@@ -6,7 +6,7 @@ steps:
   - name: "Deploy: portainer-01"
     depends_on:
       - clone
-    image: r.planetary-networks.de/quantum-public/cli:2
+    image: r.planetary-quantum.com/quantum-public/cli:2
     volumes:
       - name: docker
         path: /var/run/docker.sock
@@ -23,7 +23,7 @@ steps:
   - name: "Deploy: portainer-02"
     depends_on:
       - clone
-    image: r.planetary-networks.de/quantum-public/cli:2
+    image: r.planetary-quantum.com/quantum-public/cli:2
     volumes:
       - name: docker
         path: /var/run/docker.sock
