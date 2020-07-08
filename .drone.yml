@@ -56,7 +56,7 @@ steps:
       - >
         quantum-cli stack update --create
         --environment docker
-        --endpoint portainer-02 --stack system-prune
+        --endpoint portainer-02 --stack portainer-02-system-prune
 
 volumes:
   - name: docker
