@@ -1,0 +1,8 @@
+version: '2.0'
+
+services:
+  cron:
+    image: r.planetary-quantum.com/quantum-public/cron:latest
+    command: crond -f -l 0
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
