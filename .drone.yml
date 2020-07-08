@@ -18,6 +18,11 @@ steps:
 ---
 kind: pipeline
 name: deploy-housekeeping
+depends_on:
+  - validate quantum
+trigger:
+  event:
+    - tag
 
 steps:
   - name: "Deploy: portainer-01"
@@ -36,8 +41,6 @@ steps:
         quantum-cli stack update --create
         --environment swarm
         --endpoint portainer-01 --stack system-prune
-    when:
-      event: tag
   - name: "Deploy: portainer-02"
     depends_on:
       - clone
@@ -54,8 +57,6 @@ steps:
         quantum-cli stack update --create
         --environment docker
         --endpoint portainer-02 --stack system-prune
-    when:
-      event: tag
 
 volumes:
   - name: docker
