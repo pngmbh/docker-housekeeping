@@ -1,21 +1,40 @@
 ---
 kind: pipeline
-name: default
+name: deploy-housekeeping
 
 steps:
-  - name: Deploy
-    image: registry.internal.planetary-networks.de/quantum-public/cli:1
+  - name: "Deploy: portainer-01"
+    depends_on:
+      - clone
+    image: r.planetary-networks.de/quantum-public/cli:2
     volumes:
       - name: docker
         path: /var/run/docker.sock
     environment:
-      PORTAINER_USER: drone-io-housekeeping-deployer
-      PORTAINER_PASSWORD:
+      QUANTUM_USER: drone-io-housekeeping-deployer
+      QUANTUM_PASSWORD:
         from_secret: PORTAINER_PASSWORD
     commands:
       - >
         quantum-cli stack update --create
         --endpoint portainer-01 --stack system-prune
+    when:
+      event: tag
+  - name: "Deploy: portainer-02"
+    depends_on:
+      - clone
+    image: r.planetary-networks.de/quantum-public/cli:2
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    environment:
+      QUANTUM_USER: drone-io-housekeeping-deployer
+      QUANTUM_PASSWORD:
+        from_secret: PORTAINER_PASSWORD
+    commands:
+      - >
+        quantum-cli stack update --create
+        --endpoint portainer-02 --stack system-prune
     when:
       event: tag
 
