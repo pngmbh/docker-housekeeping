@@ -1,5 +1,22 @@
 ---
 kind: pipeline
+name: validate quantum
+trigger:
+  event:
+    - push
+
+steps:
+  - name: Validate configuration
+    image: r.planetary-quantum.com/quantum-public/cli:2
+    environment:
+      QUANTUM_USER: drone-io-housekeeping-deployer
+      QUANTUM_PASSWORD:
+        from_secret: PORTAINER_PASSWORD
+    commands:
+      - quantum-cli validate
+
+---
+kind: pipeline
 name: deploy-housekeeping
 
 steps:
