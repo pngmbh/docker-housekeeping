@@ -1,6 +1,28 @@
 ---
 kind: pipeline
+name: validate quantum
+trigger:
+  event:
+    - push
+
+steps:
+  - name: Validate configuration
+    image: r.planetary-quantum.com/quantum-public/cli:2
+    environment:
+      QUANTUM_USER: drone-io-housekeeping-deployer
+      QUANTUM_PASSWORD:
+        from_secret: PORTAINER_PASSWORD
+    commands:
+      - quantum-cli validate
+
+---
+kind: pipeline
 name: deploy-housekeeping
+depends_on:
+  - validate quantum
+trigger:
+  event:
+    - tag
 
 steps:
   - name: "Deploy: portainer-01"
@@ -17,9 +39,8 @@ steps:
     commands:
       - >
         quantum-cli stack update --create
+        --environment swarm
         --endpoint portainer-01 --stack system-prune
-    when:
-      event: tag
   - name: "Deploy: portainer-02"
     depends_on:
       - clone
@@ -34,9 +55,8 @@ steps:
     commands:
       - >
         quantum-cli stack update --create
-        --endpoint portainer-02 --stack system-prune
-    when:
-      event: tag
+        --environment docker
+        --endpoint portainer-02 --stack portainer-02-system-prune
 
 volumes:
   - name: docker

@@ -1,0 +1,9 @@
+---
+version: '1.0'
+compose: stack.yml
+
+environments:
+- name: swarm
+  compose: stack.yml
+- name: docker
+  compose: docker-compose.yml
